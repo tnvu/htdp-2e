@@ -7,4 +7,6 @@
 ; 3 for ideas. Ponder how string-insert copes with "".
 
 (define (string-insert str i)
-  (string-append (substring str 0 i) "_" (substring str i)))
+  (if (= 0 (string-length str))
+      "_"
+      (string-append (substring str 0 i) "_" (substring str i))))
