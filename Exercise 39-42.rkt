@@ -53,12 +53,18 @@
                           (rectangle 2 20 "solid" "brown")))
 (define BACKGROUND (overlay/align "middle" "middle"
                                   tree
-                                  (empty-scene (* 10 (image-width CAR)) (* 2 (image-height CAR)))))
+                                  (empty-scene (* 10 (image-width CAR))
+                                               (* 2 (image-height CAR)))))
 (define Y-CAR (- (image-height BACKGROUND) (/ (image-height CAR) 2)))
 
+; WorldState -> WorldState
+; place the right most edge of the car cw pixels from th left edge of the
+; BACKGROUND
 (define (render cw)
   (place-image CAR (- cw (/ (image-width CAR) 2)) Y-CAR BACKGROUND))
 
+; WorldState -> boolean
+; returns true if the world should stop
 (define (end? cw)
   (> (- cw (image-width CAR) MOVEMENT) (image-width BACKGROUND)))
 
@@ -68,4 +74,5 @@
     [on-tick tock]
     [stop-when end?]))
 
-(main 0)
+; Exercise 42. Modify the interpretation of the sample data definition so that a
+; state denotes the x-coordinate of the right-most edge of the car.
