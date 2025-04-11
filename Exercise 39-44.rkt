@@ -111,3 +111,31 @@
     [stop-when end?]))
 
 ; (animate ...) is a simplified version of big-bang
+
+; Exercise 44. Formulate the examples as BSL tests. Click RUN and watch them
+; fail.
+
+; WorldState Number Number String -> WorldState
+; places the car at x-mouse
+; if the given me is "button-down" 
+; given: 21 10 20 "enter"
+; wanted: 21
+; given: 42 10 20 "button-down"
+; wanted: 10
+; given: 42 10 20 "move"
+; wanted: 42
+(check-expect 21 (hyper 21 10 20 "enter"))
+(check-expect 10 (hyper 42 10 20 "button-down"))
+(check-expect 42 (hyper 42 10 20 "move"))
+(define (hyper x-position-of-car x-mouse y-mouse me)
+  x-position-of-car)
+; (define (hyper x-position-of-car x-mouse y-mouse me)
+;   (cond [(string=? "button-down" me) x-mouse]
+;         [else x-position-of-car]))
+
+; (define (main44 ws)
+;   (big-bang ws
+;     [on-tick tock]
+;     [to-draw render]
+;     [on-mouse hyper]
+;     [stop-when end?]))
