@@ -9,4 +9,4 @@
 ; -hours: [0-23], hours since midnight
 ; -minutes: [0-59], minutes of current hour
 ; -seconds: [0-59], seconds of current minute
-(define time-of-day [hours minutes seconds])
+(define-struct time-of-day [hours minutes seconds])
