@@ -9,6 +9,7 @@
 
 (define-struct time-of-day [hours minutes seconds])
 
+; Calculates the number of seconds since midnight
 (check-expect (time->seconds (make-time-of-day 12 30 2)) 45002)
 (define (time->seconds t)
   (+ (* (time-of-day-hours t) 3600)
