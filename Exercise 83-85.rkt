@@ -1,6 +1,6 @@
 ;; The first three lines of this file were inserted by DrRacket. They record metadata
 ;; about the language level of this file in a form that our tools can easily process.
-#reader(lib "htdp-beginner-reader.ss" "lang")((modname |Exercise 83-84|) (read-case-sensitive #t) (teachpacks ((lib "image.rkt" "teachpack" "2htdp") (lib "universe.rkt" "teachpack" "2htdp") (lib "batch-io.rkt" "teachpack" "2htdp"))) (htdp-settings #(#t constructor repeating-decimal #f #t none #f ((lib "image.rkt" "teachpack" "2htdp") (lib "universe.rkt" "teachpack" "2htdp") (lib "batch-io.rkt" "teachpack" "2htdp")) #f)))
+#reader(lib "htdp-beginner-reader.ss" "lang")((modname |Exercise 83-85|) (read-case-sensitive #t) (teachpacks ((lib "image.rkt" "teachpack" "2htdp") (lib "universe.rkt" "teachpack" "2htdp") (lib "batch-io.rkt" "teachpack" "2htdp"))) (htdp-settings #(#t constructor repeating-decimal #f #t none #f ((lib "image.rkt" "teachpack" "2htdp") (lib "universe.rkt" "teachpack" "2htdp") (lib "batch-io.rkt" "teachpack" "2htdp")) #f)))
 ; Exercise 83. Design the function render, which consumes an Editor and produces
 ; an image.
 ; The purpose of the function is to render the text within an empty scene of
@@ -91,15 +91,15 @@
 (check-expect (string-remove-last "abc") "ab")
 
 (define (edit ed ke)
-  (cond [(and (string=? ke "left") (> (string-length (editor-pre ed)) 0))
+  (cond [(string=? ke "left")
          (make-editor (string-remove-last (editor-pre ed))
                       (string-append (string-last (editor-pre ed))
                                      (editor-post ed)))]
-        [(and (string=? ke "right") (> (string-length (editor-post ed)) 0))
+        [(string=? ke "right")
          (make-editor (string-append (editor-pre ed)
                                      (string-first (editor-post ed)))
                       (string-rest (editor-post ed)))]
-        [(and (string=? ke "\b") (> (string-length (editor-pre ed)) 0))
+        [(string=? ke "\b")
          (make-editor (string-remove-last (editor-pre ed))
                       (editor-post ed))]
         [(or (string=? ke "\t") (string=? ke "\r")) ed]
@@ -121,3 +121,23 @@
               (make-editor "hellot" "here"))
 (check-expect (edit (make-editor "hello" "there") "up")
               (make-editor "hello" "there"))
+
+; Exercise 85. Define the function run. Given the pre field of an editor, it
+; launches an interactive editor, using render and edit from the preceding two
+; exercises for the to-draw and on-key clauses, respectively.
+
+(define (run pre)
+  (big-bang (make-editor pre "")
+    [to-draw render]
+    [on-key edit]))
+(run "hello")
+    
+
+
+
+
+
+
+
+
+
