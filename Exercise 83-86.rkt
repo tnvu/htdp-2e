@@ -1,6 +1,6 @@
 ;; The first three lines of this file were inserted by DrRacket. They record metadata
 ;; about the language level of this file in a form that our tools can easily process.
-#reader(lib "htdp-beginner-reader.ss" "lang")((modname |Exercise 83-85|) (read-case-sensitive #t) (teachpacks ((lib "image.rkt" "teachpack" "2htdp") (lib "universe.rkt" "teachpack" "2htdp") (lib "batch-io.rkt" "teachpack" "2htdp"))) (htdp-settings #(#t constructor repeating-decimal #f #t none #f ((lib "image.rkt" "teachpack" "2htdp") (lib "universe.rkt" "teachpack" "2htdp") (lib "batch-io.rkt" "teachpack" "2htdp")) #f)))
+#reader(lib "htdp-beginner-reader.ss" "lang")((modname |Exercise 83-86|) (read-case-sensitive #t) (teachpacks ((lib "image.rkt" "teachpack" "2htdp") (lib "universe.rkt" "teachpack" "2htdp") (lib "batch-io.rkt" "teachpack" "2htdp"))) (htdp-settings #(#t constructor repeating-decimal #f #t none #f ((lib "image.rkt" "teachpack" "2htdp") (lib "universe.rkt" "teachpack" "2htdp") (lib "batch-io.rkt" "teachpack" "2htdp")) #f)))
 ; Exercise 83. Design the function render, which consumes an Editor and produces
 ; an image.
 ; The purpose of the function is to render the text within an empty scene of
@@ -90,7 +90,7 @@
 (check-expect (string-remove-last "a") "")
 (check-expect (string-remove-last "abc") "ab")
 
-(define (edit ed ke)
+(define (edit84 ed ke)
   (cond [(string=? ke "left")
          (make-editor (string-remove-last (editor-pre ed))
                       (string-append (string-last (editor-pre ed))
@@ -107,19 +107,19 @@
          (make-editor (string-append (editor-pre ed) ke)
                       (editor-post ed))]
         [else ed]))
-(check-expect (edit (make-editor "hello" "there") "\b")
+(check-expect (edit84 (make-editor "hello" "there") "\b")
               (make-editor "hell" "there"))
-(check-expect (edit (make-editor "hello" "there") "\t")
+(check-expect (edit84 (make-editor "hello" "there") "\t")
               (make-editor "hello" "there"))
-(check-expect (edit (make-editor "hello" "there") "\r")
+(check-expect (edit84 (make-editor "hello" "there") "\r")
               (make-editor "hello" "there"))
-(check-expect (edit (make-editor "hello" "there") " ")
+(check-expect (edit84 (make-editor "hello" "there") " ")
               (make-editor "hello " "there"))
-(check-expect (edit (make-editor "hello" "there") "left")
+(check-expect (edit84 (make-editor "hello" "there") "left")
               (make-editor "hell" "othere"))
-(check-expect (edit (make-editor "hello" "there") "right")
+(check-expect (edit84 (make-editor "hello" "there") "right")
               (make-editor "hellot" "here"))
-(check-expect (edit (make-editor "hello" "there") "up")
+(check-expect (edit84 (make-editor "hello" "there") "up")
               (make-editor "hello" "there"))
 
 ; Exercise 85. Define the function run. Given the pre field of an editor, it
@@ -129,15 +129,32 @@
 (define (run pre)
   (big-bang (make-editor pre "")
     [to-draw render]
-    [on-key edit]))
-(run "hello")
-    
+    [on-key edit86]))
 
-
-
-
-
-
-
-
-
+; Exercise 86. Notice that if you type a lot, your editor program does not
+; display all of the text. Instead the text is cut off at the right margin.
+; Modify your function edit from exercise 84 so that it ignores a keystroke if
+; adding it to the end of the pre field would mean the rendered text is too wide
+; for your canvas.
+(define (edit86 ed ke)
+  (cond [(string=? ke "left")
+         (make-editor (string-remove-last (editor-pre ed))
+                      (string-append (string-last (editor-pre ed))
+                                     (editor-post ed)))]
+        [(string=? ke "right")
+         (make-editor (string-append (editor-pre ed)
+                                     (string-first (editor-post ed)))
+                      (string-rest (editor-post ed)))]
+        [(string=? ke "\b")
+         (make-editor (string-remove-last (editor-pre ed))
+                      (editor-post ed))]
+        [(or (string=? ke "\t") (string=? ke "\r")) ed]
+        [(and (= (string-length ke) 1)
+              (< (image-width (render-text (string-append (editor-pre ed)
+                                                          ke
+                                                          (editor-post ed))))
+                 (image-width BACKGROUND)))                              
+         (make-editor (string-append (editor-pre ed) ke)
+                      (editor-post ed))]
+        [else ed]))
+; (run "hello world")
